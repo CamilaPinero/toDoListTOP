@@ -2,6 +2,7 @@ body {
 	width: 100vw;
 	height: 100vh;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
@@ -15,6 +16,11 @@ h5 {
 
 .card.list {
 	max-width: 300px;
+}
+
+.control {
+	width: 80vw;
+	padding: 20px;
 }
 
 .board {
@@ -49,7 +55,6 @@ h5 {
 .todo {
 	margin: 5px;
 	border: 1px solid rgb(228, 228, 228);
-	border-left: 15px solid yellowgreen;
 }
 
 .todo-info {
@@ -81,7 +86,23 @@ button.delete {
 	justify-content: center;
 }
 
+button.addToDo {
+	margin: 5px;
+}
+
 svg {
 	width: 1.6em;
 	height: 1.6em;
+}
+
+.priorityLow {
+	border-left: 15px solid yellowgreen;
+}
+
+.priorityMed {
+	border-left: 15px solid rgb(226, 215, 56);
+}
+
+.priorityHigh {
+	border-left: 15px solid rgb(205, 50, 50);
 }

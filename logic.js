@@ -1,8 +1,6 @@
-import * as crypto from "crypto";
-
 class ToDo {
 	constructor(title, description, dueDate, priority, checklist) {
-		this.id = 1; //crypto.randomUUID();
+		this.id = crypto.randomUUID();
 		this.title = title;
 		this.description = description;
 		this.dueDate = dueDate;
@@ -20,6 +18,7 @@ class ToDo {
 
 class ToDoList {
 	constructor(title, toDos) {
+		this.id = crypto.randomUUID();
 		this.title = title; // type: string
 		this.toDos = toDos; // type: []
 	}
@@ -33,14 +32,12 @@ class ToDoList {
 		const todo = this.toDos.find((toDo) => toDo.id === id);
 		todo.editToDo(...newTodo);
 	}
+
+	deleteToDo(id) {
+		this.toDos = this.toDos.filter((toDo) => {
+			toDo.id !== id;
+		});
+	}
 }
 
-let list1 = new ToDoList("List1", []);
-
-let toDo1 = new ToDo("prueba", "primer todo", "11/05", 1, false);
-console.log(toDo1);
-
-list1.addToDo(toDo1);
-list1.editToDoById(1, "prueba", "descripcion editada", "11/05", 1, false);
-
-console.log(list1);
+export { ToDo, ToDoList };
