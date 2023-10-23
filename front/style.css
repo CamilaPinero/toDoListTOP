@@ -95,14 +95,14 @@ svg {
 	height: 1.6em;
 }
 
-.priorityLow {
+.priority-low {
 	border-left: 15px solid yellowgreen;
 }
 
-.priorityMed {
+.priority-medium {
 	border-left: 15px solid rgb(226, 215, 56);
 }
 
-.priorityHigh {
+.priority-high {
 	border-left: 15px solid rgb(205, 50, 50);
 }
