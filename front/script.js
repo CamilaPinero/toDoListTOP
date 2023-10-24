@@ -4,30 +4,17 @@ $("#myModal").on("shown.bs.modal", function () {
 	$("#myInput").trigger("focus");
 });
 
-let lists = [
-	{
-		id: 1,
-		title: "Lista 1",
-		toDos: [
-			{
-				title: "todo1",
-				description:
-					"Some quick example text to make up the bulk of the description.",
-				dueDate: Date(),
-				priority: "high",
-				checklist: true,
-			},
-			{
-				title: "Lista 1",
-				description:
-					"Some quick example text to make up the bulk of the description.",
-				dueDate: Date(),
-				priority: "low",
-				checklist: false,
-			},
-		],
-	},
-];
+let lists = [];
+
+let listaPrueba = new ToDoList("lista 1", []);
+lists.push(listaPrueba);
+let toDoPrueba = new ToDo(
+	"Titulo todo prueba",
+	"Descripcion todo prueba",
+	"Tue Oct 24 2023 15:15:31",
+	"low"
+);
+listaPrueba.addToDo(toDoPrueba);
 
 const board = document.querySelector(".board");
 const addList = document.querySelector(".addList");
@@ -41,7 +28,7 @@ addList.addEventListener("click", (e) => {
 
 function renderTodo(todo) {
 	return `<li class="list-group-item" style="padding: 0px">
-    <div id="${todo.id}" class="todo priority-${todo.priority}">
+    <div id="toDo-${todo.id}" class="todo priority-${todo.priority}">
         <h5 class="header">${todo.title}</h5>
         <div class="card-body">
             <p class="card-text">
@@ -49,7 +36,9 @@ function renderTodo(todo) {
             </p>
             <div class="todo-info">
                 <p class="card-text">${todo.dueDate}</p>
-                <button class="btn btn-sm delete">
+                <button type="button" class="btn btn-sm delete delete-toDo" id="delete-toDo-${
+					todo.id
+				}">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -95,14 +84,14 @@ function renderList(list) {
 		id="addToDo-${list.id}"
 		class="btn btn-primary addToDo"
 		data-toggle="modal"
-		data-target="#modal"
+		data-target="#modal-${list.id}"
 	>
 		Add To Do
 	</button>
 	<!-- modal -->
 	<div
 		class="modal fade"
-		id="modal"
+		id="modal-${list.id}"
 		tabindex="-1"
 		role="dialog"
 		aria-labelledby="modal-${list.id}"
@@ -198,7 +187,7 @@ function renderList(list) {
 function renderAll() {
 	board.innerHTML = `${lists.map((l) => renderList(l)).join("")}`;
 
-	lists.map((l) => {
+	lists.forEach((l) => {
 		document
 			.querySelector(`#delete-list-${l.id}`)
 			.addEventListener("click", (e) => {
@@ -207,27 +196,41 @@ function renderAll() {
 					list.id !== l.id;
 				});
 			});
-		document
-			.querySelector(`#toDoBody-${l.id}`)
-			.addEventListener("submit", (e) => {
-				e.preventDefault();
+	});
 
-				let toDo = new ToDo(
-					e.target.elements.title.value,
-					e.target.elements.description.value,
-					e.target.elements.dueDate.value,
-					e.target.elements.priority.value
-				);
+	document.querySelectorAll("form").forEach((form) => {
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
 
-				l.addToDo(toDo);
-				document.querySelector(".modal-backdrop").remove();
+			let toDo = new ToDo(
+				e.target.elements.title.value,
+				e.target.elements.description.value,
+				e.target.elements.dueDate.value,
+				e.target.elements.priority.value
+			);
 
-				renderAll();
-			});
+			let list = lists.find((l) => l.id === form.id.slice(9));
+			list.addToDo(toDo);
+
+			/* document.querySelectorAll(".delete-toDo").forEach((btn) => {
+				btn.addEventListener("click", (e) => {
+					document
+						.querySelector(`#toDo-${btn.id.slice(12)}`)
+						.remove();
+					l.deleteToDo(btn.id.slice(12));
+					console.log(lists);
+				});
+			}); */
+
+			document.querySelector(".modal-backdrop").remove();
+
+			renderAll();
+		});
 	});
 }
 
 renderAll();
 
-//arreglar error cuando trato de agregar todos a otra lista
 //agregar funcion a los botones de borrar, donde?, hay que usar el list.id
+
+// sacar las comas de las listas
