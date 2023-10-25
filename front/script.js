@@ -11,7 +11,7 @@ lists.push(listaPrueba);
 let toDoPrueba = new ToDo(
 	"Titulo todo prueba",
 	"Descripcion todo prueba",
-	"Tue Oct 24 2023 15:15:31",
+	"2023-10-25T15:03",
 	"low"
 );
 listaPrueba.addToDo(toDoPrueba);
@@ -27,8 +27,10 @@ addList.addEventListener("click", (e) => {
 });
 
 function renderTodo(todo) {
-	return `<li class="list-group-item" style="padding: 0px">
-    <div id="toDo-${todo.id}" class="todo priority-${todo.priority}">
+	return `<li class="list-group-item" style="padding: 0px" id="toDo-${
+		todo.id
+	}" >
+    <div  class="todo priority-${todo.priority}">
         <h5 class="header">${todo.title}</h5>
         <div class="card-body">
             <p class="card-text">
@@ -41,8 +43,7 @@ function renderTodo(todo) {
 				}">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                    >
+                        viewBox="0 0 24 24"  >
                         <title>delete-outline</title>
                         <path
                             d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z"
@@ -212,25 +213,28 @@ function renderAll() {
 			let list = lists.find((l) => l.id === form.id.slice(9));
 			list.addToDo(toDo);
 
-			/* document.querySelectorAll(".delete-toDo").forEach((btn) => {
-				btn.addEventListener("click", (e) => {
-					document
-						.querySelector(`#toDo-${btn.id.slice(12)}`)
-						.remove();
-					l.deleteToDo(btn.id.slice(12));
-					console.log(lists);
-				});
-			}); */
-
 			document.querySelector(".modal-backdrop").remove();
 
 			renderAll();
+		});
+	});
+	document.querySelectorAll(".delete-toDo").forEach((btn) => {
+		btn.addEventListener("click", (e) => {
+			document.querySelector(`#toDo-${btn.id.slice(12)}`).remove();
+
+			for (let i = 0; i < lists.length; i++) {
+				for (let j = 0; j < lists[i].toDos.length; j++) {
+					if (lists[i].toDos[j].id === btn.id.slice(12)) {
+						lists[i].deleteToDo(btn.id.slice(12));
+						console.log(lists[i]);
+					}
+				}
+			}
 		});
 	});
 }
 
 renderAll();
 
-//agregar funcion a los botones de borrar, donde?, hay que usar el list.id
-
+// agregar if al btn add list para que si es null no se agregue la lista al board
 // sacar las comas de las listas
