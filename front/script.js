@@ -21,8 +21,10 @@ const addList = document.querySelector(".addList");
 
 addList.addEventListener("click", (e) => {
 	let listTitle = prompt("List title", "New list"); //cambiar esto por modal
-	let list = new ToDoList(listTitle, []);
-	lists.push(list);
+	if (listTitle !== null) {
+		let list = new ToDoList(listTitle, []);
+		lists.push(list);
+	}
 	renderAll();
 });
 
@@ -79,7 +81,7 @@ function renderList(list) {
 		</button>
 	</div>
 	<ul class="list-group list-group-flush">
-		${list.toDos.map((t) => renderTodo(t))}
+		${list.toDos.map((t) => renderTodo(t)).join("")}
 	</ul>
 	<button
 		id="addToDo-${list.id}"
@@ -236,5 +238,4 @@ function renderAll() {
 
 renderAll();
 
-// agregar if al btn add list para que si es null no se agregue la lista al board
-// sacar las comas de las listas
+// arreglar problema cuando apreto muchas cosas y se rompe el lists.find
