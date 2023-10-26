@@ -1,3 +1,4 @@
+//import addDays from "date-fns/addDays";
 import { ToDo, ToDoList } from "../logic.js";
 
 $("#myModal").on("shown.bs.modal", function () {
@@ -118,13 +119,15 @@ function renderList(list) {
 				<form id="toDoBody-${list.id}">
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="title" class="col-form-label"
+							<label for="title" class="col-form-label" 
 								>Title</label
 							>
 							<input
 								type="text"
 								class="form-control"
 								id="title"
+								value="To do title" 
+								required
 							/>
 						</div>
 						<div class="form-group">
@@ -134,26 +137,28 @@ function renderList(list) {
 							<textarea
 								class="form-control"
 								id="description"
+								placeholder="To do description" 
+								required
 							></textarea>
 						</div>
 						<div class="form-group">
 							<label for="dueDate" class="col-form-label"
-								>Due Date</label
+							>Due Date</label
 							>
 							<input
-								type="datetime-local"
-								class="form-control"
-								id="dueDate"
+							type="datetime-local"
+							class="form-control"
+							id="dueDate"
+							required
 							/>
 						</div>
 						<div class="form-group">
 							<label for="priority" class="col-form-label"
 								>Priority</label
 							>
-							<select id='priority' class="form-control priority">
-								<option selected disabled>
-									Select priority
-								</option>
+							<select id='priority' class="form-control priority"
+							required >
+								
 								<option value="low">Low</option>
 								<option value="medium">Medium</option>
 								<option value="high">High</option>
@@ -195,9 +200,7 @@ function renderAll() {
 			.querySelector(`#delete-list-${l.id}`)
 			.addEventListener("click", (e) => {
 				document.querySelector(`#list-${l.id}`).remove();
-				lists = lists.filter((list) => {
-					list.id !== l.id;
-				});
+				lists = lists.filter((list) => !(list.id === l.id));
 			});
 	});
 
@@ -214,12 +217,15 @@ function renderAll() {
 
 			let list = lists.find((l) => l.id === form.id.slice(9));
 			list.addToDo(toDo);
+			console.log(list);
+			console.log(lists);
 
 			document.querySelector(".modal-backdrop").remove();
 
 			renderAll();
 		});
 	});
+
 	document.querySelectorAll(".delete-toDo").forEach((btn) => {
 		btn.addEventListener("click", (e) => {
 			document.querySelector(`#toDo-${btn.id.slice(12)}`).remove();
@@ -228,7 +234,6 @@ function renderAll() {
 				for (let j = 0; j < lists[i].toDos.length; j++) {
 					if (lists[i].toDos[j].id === btn.id.slice(12)) {
 						lists[i].deleteToDo(btn.id.slice(12));
-						console.log(lists[i]);
 					}
 				}
 			}
@@ -238,4 +243,6 @@ function renderAll() {
 
 renderAll();
 
-// arreglar problema cuando apreto muchas cosas y se rompe el lists.find
+// editar los toDos
+//agregar fns date
+//agregar lo de local storage
