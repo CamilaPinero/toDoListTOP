@@ -40,28 +40,4 @@ class ToDoList {
 	}
 }
 
-/* let lists = [];
-
-let listaPrueba = new ToDoList("lista 1", []);
-lists.push(listaPrueba);
-let toDoPrueba = new ToDo(
-	"Titulo todo prueba",
-	"Descripcion todo prueba",
-	"2023-10-25T15:03",
-	"low"
-);
-
-let toDoPrueba1 = new ToDo(
-	"Titulo todo prueba1",
-	"Descripcion todo prueba",
-	"2023-10-25T15:03",
-	"low"
-);
-
-listaPrueba.addToDo(toDoPrueba);
-listaPrueba.addToDo(toDoPrueba1);
-
-listaPrueba.deleteToDo(toDoPrueba.id);
-console.log("final", listaPrueba); */
-
 export { ToDo, ToDoList };

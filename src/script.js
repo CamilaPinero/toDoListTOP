@@ -1,27 +1,25 @@
-//import addDays from "date-fns/addDays";
 import { ToDo, ToDoList } from "../logic.js";
 
 $("#myModal").on("shown.bs.modal", function () {
 	$("#myInput").trigger("focus");
 });
 
-let lists = [];
-
-let listaPrueba = new ToDoList("lista 1", []);
-lists.push(listaPrueba);
-let toDoPrueba = new ToDo(
-	"Titulo todo prueba",
-	"Descripcion todo prueba",
-	"2023-10-25T15:03",
-	"low"
-);
-listaPrueba.addToDo(toDoPrueba);
+let lists = [
+	new ToDoList("lista 1", [
+		new ToDo(
+			"Titulo todo prueba",
+			"Descripcion todo prueba",
+			"2023-10-25T15:03",
+			"low"
+		),
+	]),
+];
 
 const board = document.querySelector(".board");
 const addList = document.querySelector(".addList");
 
 addList.addEventListener("click", (e) => {
-	let listTitle = prompt("List title", "New list"); //cambiar esto por modal
+	let listTitle = prompt("List title", "New list");
 	if (listTitle !== null) {
 		let list = new ToDoList(listTitle, []);
 		lists.push(list);
@@ -53,6 +51,17 @@ function renderTodo(todo) {
                         />
                     </svg>
                 </button>
+				<button type="button" class="btn btn-sm edit-toDo" id="edit-toDo-${
+					todo.id
+				}" data-toggle="modal"
+				data-target="#modal-${todo.id}">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+					<title>pencil-outline</title>
+					<path
+						d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"
+					/>
+				</svg>
+			</button>
                 <input
                     class="form-check-input"
                     type="checkbox"
@@ -62,7 +71,104 @@ function renderTodo(todo) {
             </div>
         </div>
     </div>
-</li>`;
+	<!-- modal -->
+	<div
+		class="modal fade"
+		id="modal-${todo.id}"
+		tabindex="-1"
+		role="dialog"
+		aria-labelledby="modal-${todo.id}"
+		aria-hidden="true"
+	>
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">
+						Edit To Do
+					</h5>
+					<button
+						type="button"
+						class="close"
+						data-dismiss="modal"
+						aria-label="Close"
+					>
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form id="edit-todo-${todo.id}" class="form-edit-toDo">
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="title" class="col-form-label" 
+								>${todo.title}</label
+							>
+							<input
+								type="text"
+								class="form-control"
+								id="title"
+								value="To do title" 
+								required
+							/>
+						</div>
+						<div class="form-group">
+							<label for="description" class="col-form-label"
+								>Description</label
+							>
+							<textarea
+								class="form-control"
+								id="description"
+								placeholder="To do description" 
+								required
+							>${todo.description}</textarea>
+						</div>
+						<div class="form-group">
+							<label for="dueDate" class="col-form-label"
+							>Due Date</label
+							>
+							<input
+							type="datetime-local"
+							class="form-control"
+							id="dueDate"
+							required
+							/>
+						</div>
+						<div class="form-group">
+							<label for="priority" class="col-form-label"
+								>Priority</label
+							>
+							<select id='priority' class="form-control priority"
+							required >
+								
+								<option value="low">Low</option>
+								<option value="medium">Medium</option>
+								<option value="high">High</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-dismiss="modal"
+						>
+							Close
+						</button>
+						<button
+							type="submit"
+							form="edit-todo-${todo.id}"
+							value="Submit"
+							class="btn btn-primary editToDoBody"
+                            data-bs-dismiss="modal"
+							id="editToDoBody-${todo.id}"
+						>
+							Edit To Do
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+</li>
+
+`;
 }
 
 function renderList(list) {
@@ -116,7 +222,7 @@ function renderList(list) {
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form id="toDoBody-${list.id}">
+				<form id="toDoBody-${list.id}" class="form-new-toDo">
 					<div class="modal-body">
 						<div class="form-group">
 							<label for="title" class="col-form-label" 
@@ -201,10 +307,11 @@ function renderAll() {
 			.addEventListener("click", (e) => {
 				document.querySelector(`#list-${l.id}`).remove();
 				lists = lists.filter((list) => !(list.id === l.id));
+				renderAll();
 			});
 	});
 
-	document.querySelectorAll("form").forEach((form) => {
+	document.querySelectorAll(".form-new-toDo").forEach((form) => {
 		form.addEventListener("submit", (e) => {
 			e.preventDefault();
 
@@ -217,8 +324,6 @@ function renderAll() {
 
 			let list = lists.find((l) => l.id === form.id.slice(9));
 			list.addToDo(toDo);
-			console.log(list);
-			console.log(lists);
 
 			document.querySelector(".modal-backdrop").remove();
 
@@ -237,12 +342,39 @@ function renderAll() {
 					}
 				}
 			}
+			renderAll();
 		});
 	});
+
+	document.querySelectorAll(".form-edit-toDo").forEach((form) => {
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			for (let i = 0; i < lists.length; i++) {
+				for (let j = 0; j < lists[i].toDos.length; j++) {
+					if (
+						lists[i].toDos[j].id ===
+						e.target.elements[5].id.slice(13)
+					) {
+						lists[i].editToDoById(
+							e.target.elements[5].id.slice(13),
+							e.target.elements.title.value,
+							e.target.elements.description.value,
+							e.target.elements.dueDate.value,
+							e.target.elements.priority.value
+						);
+					}
+				}
+			}
+			document.querySelector(".modal-backdrop").remove();
+			renderAll();
+		});
+	});
+
+	localStorage.setItem("lists", JSON.stringify(lists));
 }
 
-renderAll();
-
-// editar los toDos
-//agregar fns date
-//agregar lo de local storage
+window.addEventListener("load", (e) => {
+	const localLists = localStorage.getItem("lists");
+	if (localLists) lists = JSON.parse(localLists);
+	renderAll();
+});

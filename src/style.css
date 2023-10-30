@@ -78,7 +78,8 @@ p.card-text {
 	height: 2em;
 }
 
-button.delete {
+button.delete,
+button.edit-toDo {
 	width: 2.3em;
 	height: 2.3em;
 	padding: 0;
